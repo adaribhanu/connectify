@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import loginIcon from '../assets/images/login_icon.png';
+import { useNavigate } from 'react-router-dom';
 
 
 function Reg() {
@@ -9,6 +10,7 @@ function Reg() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const navigate = useNavigate();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
@@ -26,6 +28,7 @@ function Reg() {
 
       if (response.ok) {
         alert('Registration Successful! 🎉');
+        navigate('/SetupProfile');  
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -81,7 +84,7 @@ function Reg() {
           </div>
 
           <div className='orLogin w-[70%] flex justify-end text-sm font-bold mt-[10px]'>
-            <Link to="/" className='register text-[#ff3131] hover:text-[#af2c2c]'>Login</Link>
+            <Link to="/login" className='register text-[#ff3131] hover:text-[#af2c2c]'>Login</Link>
           </div>
 
           <button className="login_btn w-[35%] h-[40px] rounded-[30px] bg-[#ff3131] text-white py-2 mt-[30px] border-none hover:bg-[#bb1e1e] transition font-bold text-[15px] flex items-center justify-center" style={{ boxShadow: '0px 1px 3px 0px #bb1e1e' }} 
