@@ -5,7 +5,7 @@ import {
   FaShareAlt,
   FaRegBookmark,
 } from 'react-icons/fa';
-import profile from '../assets/Images/profile.png';
+import profile_icon from "../assets/Images/profile.png";
 import image from '../assets/Images/image1.png';
 
 const PostCard = () => {
@@ -14,7 +14,7 @@ const PostCard = () => {
   const handleToggleReadMore = () => {
     setExpanded(!expanded);
   };
-
+  const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
   return (
     <div className="w-full bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 min-h-[250px]">
       {/* Image with shadow */}
@@ -44,13 +44,9 @@ const PostCard = () => {
       {/* Post Info */}
       <div className="px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
-          <img
-            src={profile}
-            alt="User"
-            className="w-8 h-8 rounded-full object-cover"
-          />
+          <img src={userInfo.profilePic || profile_icon} alt="Profile"className="w-8 h-8 rounded-full"/>
           <div>
-            <p className="text-sm font-semibold">post by abc</p>
+          <p className="font-semibold">{userInfo.name || "User"}</p>
             <p className="text-xs text-gray-500">28th, Mar 2024</p>
           </div>
         </div>

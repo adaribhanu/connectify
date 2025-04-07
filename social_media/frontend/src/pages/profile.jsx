@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
-import profilePic from '../assets/images/profile.png';
+import React, { useState, useEffect } from 'react';
 import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa';
 import Post from '../components/post';
 import Navbar from '../components/nav';
+import profile_icon from "../assets/Images/profile.png";
+import { useLocation } from 'react-router-dom';
 
 function ProfilePage() {
-  const [user] = useState({
-    name: 'John Doe',
-    username: '@johndoe123',
-    bio: 'MERN Stack Dev | I love coding & coffee ☕',
-    profilePic: profilePic,
-    location: 'New York, USA',
-    profession: 'Software Engineer',
-    phone: '+1 234 567 8901',
-  });
+  const location = useLocation();
 
+  const [userInfo, setUserInfo] = useState({});
   const [posts, setPosts] = useState([
     { id: 1, content: 'Excited to share my new project! 🚀', date: '2025-04-01', likes: 12 },
     { id: 2, content: 'Just had the best coffee ever! ☕❤️', date: '2025-03-29', likes: 7 }
@@ -22,6 +16,17 @@ function ProfilePage() {
 
   const [reminders, setReminders] = useState([]);
   const [reminderInput, setReminderInput] = useState({ title: '', date: '' });
+
+  useEffect(() => {
+    if (location.state?.userInfo) {
+      setUserInfo(location.state.userInfo);
+    } else {
+      const storedUser = localStorage.getItem("userInfo");
+      if (storedUser) {
+        setUserInfo(JSON.parse(storedUser));
+      }
+    }
+  }, [location.state]);
 
   const handleReminderSubmit = (e) => {
     e.preventDefault();
@@ -43,25 +48,24 @@ function ProfilePage() {
         {/* Left Sidebar - Profile */}
         <div className="lg:w-[20%] w-full">
           <div className="bg-white p-4 flex flex-col rounded-2xl shadow-lg items-center">
-            <img src={user.profilePic} alt="profile" className="w-[100px] h-[100px] rounded-full object-cover shadow" />
-            <h2 className="text-2xl mt-[10px] font-bold text-[#ff3131]">{user.name}</h2>
-            <h2 className="text-[14px] font-bold text-[#737373]">{user.username}</h2>
+            <img src={userInfo.profilePic || profile_icon} alt="profile" className="w-[100px] h-[100px] rounded-full object-cover shadow" />
+            <h2 className="text-2xl mt-[10px] font-bold text-[#ff3131]">{userInfo.name}</h2>
+            <h2 className="text-[14px] font-bold text-[#737373]">{userInfo.username}</h2>
             <div className="flex justify-between w-full bg-[#DFE1E5] rounded-[15px] gap-2 p-3 mt-[20px] text-center text-sm">
               <div className="flex-1"><strong>20k</strong><br />Followers</div>
               <div className="flex-1"><strong>10k</strong><br />Following</div>
               <div className="flex-1"><strong>{posts.length}</strong><br />Posts</div>
             </div>
-            <p className="text-gray-600 text-center mt-[20px]">{user.bio}</p>
-            <p className="text-sm text-gray-500 mt-1">📍 {user.location}</p>
-            <p className="text-sm text-gray-500">💼 {user.profession}</p>
-            <p className="text-sm text-gray-500">📞 {user.phone}</p>
+            <p className="text-gray-600 text-center mt-[20px]">{userInfo.bio}</p>
+            <p className="text-sm text-gray-500 mt-1">📍 {userInfo.location}</p>
+            <p className="text-sm text-gray-500">💼 {userInfo.profession}</p>
+            <p className="text-sm text-gray-500">📞 {userInfo.phone}</p>
           </div>
         </div>
 
         {/* Middle Section - Posts */}
         <div className="lg:w-[50%] w-full flex flex-col gap-6">
           <Post />
-
           <div>
             <h3 className="text-xl font-semibold text-[#ff3131] mb-4">Your Posts</h3>
             <div className="space-y-4">

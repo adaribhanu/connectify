@@ -1,14 +1,16 @@
-import profile from "../assets/Images/profile.png";
+import profile_icon from "../assets/Images/profile.png";
 import stories from "../assets/Images/stories.png";
 import image from "../assets/Images/image.png";
 import memories from "../assets/Images/memories.png";
 
+
 function Post() {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
   return (
     <div className="w-[100%] h-[110px] bg-white rounded-[15px]">
       {/* Top row: profile image + input */}
       <div className="flex items-center space-x-[20px] pt-[15px] px-[20px]">
-        <img src={profile} alt="Profile" className="w-10 h-10 rounded-full" />
+        <img src={userInfo.profilePic || profile_icon} alt="Profile"className="w-10 h-10 rounded-full"/>
         <input
           type="text"
           placeholder="What's happening?"

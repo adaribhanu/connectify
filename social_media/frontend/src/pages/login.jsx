@@ -27,12 +27,12 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Login Successful! 🎉');
         localStorage.setItem('token', data.token);
         navigate('/home');
       } else {
         alert(`Error: ${data.message}`);
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       alert('Something went wrong. Please try again!');
     }

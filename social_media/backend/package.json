@@ -27,7 +27,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "social_media": "file:"
   },
   "devDependencies": {
     "concurrently": "^8.0.0",
