@@ -7,7 +7,7 @@ import search from "../assets/Images/search.png";
 
 function Navbar() {
   const [userInfo, setUserInfo] = useState({
-    name: "User",
+    name: "Name",
     username: "@username",
     profilePic: profile_icon,
   });
@@ -76,8 +76,8 @@ function Navbar() {
 
         {/* User Info */}
         <div className="text-right">
-          <p className="font-semibold">{userInfo.name}</p>
-          <p className="text-sm text-[#737373]">{userInfo.username}</p>
+          <p className="font-semibold">{userInfo.name || "Name"}</p>
+          <p className="text-sm text-[#737373]">{userInfo.username || "@Username"}</p>
         </div>
 
         {/* Profile Picture */}

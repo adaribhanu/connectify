@@ -6,7 +6,13 @@ function SpeedNav() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear token
+    // Clear stored user data
+    localStorage.removeItem('token');       // If you're storing token
+    localStorage.removeItem('userInfo');    // Remove user info
+    
+    // Optionally clear all:
+    // localStorage.clear();
+    
     navigate('/login'); // Redirect to login
   };
 

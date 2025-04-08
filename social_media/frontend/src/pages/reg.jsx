@@ -34,7 +34,7 @@ function Reg() {
       const data = await response.json();
 
       if (response.ok) {
-        navigate('/SetupProfile', { state: { username } }); // ✅ Passing username to next page
+        navigate('/SetupProfile', { state: { username, email } }); // ✅ Passing username to next page
       } else {
         alert(`Error: ${data.message}`);
       }

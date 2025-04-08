@@ -18,7 +18,8 @@ function UserSetup() {
     location: '',
     profession: '',
     phone: '',
-    profilePic: profile1
+    email: '',
+    profilePic: profile1,
   });
 
   const [usernameEdited, setUsernameEdited] = useState(false);
@@ -26,10 +27,11 @@ function UserSetup() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.username) {
+    if (location.state?.username || location.state?.email) {
       setForm((prevForm) => ({
         ...prevForm,
-        username: `@${location.state.username}`,
+        username: location.state.username ? `@${location.state.username}` : prevForm.username,
+        email: location.state.email || prevForm.email,
       }));
       setUsernameEdited(true);
     }
@@ -44,7 +46,7 @@ function UserSetup() {
       setForm((prev) => ({
         ...prev,
         name: value,
-        username: usernameEdited ? prev.username : generated
+        username: usernameEdited ? prev.username : generated,
       }));
     } else if (name === 'username') {
       setUsernameEdited(true);
@@ -62,26 +64,16 @@ function UserSetup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("Submitting form data:", form); // for debugging
       await axios.post('http://localhost:5000/api/profile/userSetup', form);
-      console.log("Form before storing:", form);
-      const userInfo = {
-        name: form.name,
-        username: form.username,
-        profilePic: form.profilePic,
-        bio: form.bio,
-        location: form.location,
-        profession: form.profession,
-        phone: form.phone,
-        dob: form.dob
-      };
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-      console.log("LocalStorage:", localStorage.getItem("userInfo"));
+
       setTimeout(() => {
-        alert("Account Created Successfully");
+        alert('Account Created Successfully');
         navigate('/home');
       }, 100);
     } catch (err) {
-      console.error(err);
+      console.error('Submission error:', err.response?.data || err.message);
+      alert(err.response?.data?.message || "Failed to create profile.");
     }
   };
 
@@ -106,8 +98,22 @@ function UserSetup() {
               ))}
             </div>
 
-            {/* Other Fields */}
-            {['location', 'profession', 'phone'].map((field) => (
+            <div className="flex flex-col md:flex-row gap-4">
+              {['location', 'email'].map((field) => (
+                <div key={field} className="w-full h-[45px] bg-[#DFE1E5] rounded-[15px] flex items-center">
+                  <input
+                    className="w-full px-[10px] py-1 text-black font-bold text-[15px] rounded-[15px] placeholder:font-bold border-none focus:outline-none"
+                    name={field}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={form[field]}
+                    onChange={handleChange}
+                    readOnly={field === 'email'}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {['profession', 'phone'].map((field) => (
               <div key={field} className="w-full h-[45px] bg-[#DFE1E5] rounded-[15px] flex items-center">
                 <input
                   className="w-full px-[10px] py-1 text-black font-bold text-[15px] rounded-[15px] placeholder:font-bold border-none focus:outline-none"

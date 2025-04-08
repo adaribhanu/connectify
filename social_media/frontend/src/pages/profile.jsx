@@ -49,17 +49,17 @@ function ProfilePage() {
         <div className="lg:w-[20%] w-full">
           <div className="bg-white p-4 flex flex-col rounded-2xl shadow-lg items-center">
             <img src={userInfo.profilePic || profile_icon} alt="profile" className="w-[100px] h-[100px] rounded-full object-cover shadow" />
-            <h2 className="text-2xl mt-[10px] font-bold text-[#ff3131]">{userInfo.name}</h2>
-            <h2 className="text-[14px] font-bold text-[#737373]">{userInfo.username}</h2>
+            <h2 className="text-2xl mt-[10px] font-bold text-[#ff3131]">{userInfo.name || "Name"}</h2>
+            <h2 className="text-[14px] font-bold text-[#737373]">{userInfo.username || "@Username"}</h2>
             <div className="flex justify-between w-full bg-[#DFE1E5] rounded-[15px] gap-2 p-3 mt-[20px] text-center text-sm">
               <div className="flex-1"><strong>20k</strong><br />Followers</div>
               <div className="flex-1"><strong>10k</strong><br />Following</div>
               <div className="flex-1"><strong>{posts.length}</strong><br />Posts</div>
             </div>
-            <p className="text-gray-600 text-center mt-[20px]">{userInfo.bio}</p>
-            <p className="text-sm text-gray-500 mt-1">📍 {userInfo.location}</p>
-            <p className="text-sm text-gray-500">💼 {userInfo.profession}</p>
-            <p className="text-sm text-gray-500">📞 {userInfo.phone}</p>
+            <p className="text-gray-600 text-center mt-[20px]">{userInfo.bio || ""}</p>
+            <p className="text-sm text-gray-500 mt-1">📍 {userInfo.location || ""}</p>
+            <p className="text-sm text-gray-500">💼 {userInfo.profession || ""}</p>
+            <p className="text-sm text-gray-500">📞 {userInfo.phone || ""}</p>
           </div>
         </div>
 

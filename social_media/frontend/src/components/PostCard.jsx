@@ -46,7 +46,7 @@ const PostCard = () => {
         <div className="flex items-center gap-2 mb-1">
           <img src={userInfo.profilePic || profile_icon} alt="Profile"className="w-8 h-8 rounded-full"/>
           <div>
-          <p className="font-semibold">{userInfo.name || "User"}</p>
+          <p className="font-semibold">{userInfo.name || "Name"}</p>
             <p className="text-xs text-gray-500">28th, Mar 2024</p>
           </div>
         </div>
