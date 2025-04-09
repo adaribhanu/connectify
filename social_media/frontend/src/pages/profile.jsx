@@ -7,13 +7,8 @@ import { useLocation } from 'react-router-dom';
 
 function ProfilePage() {
   const location = useLocation();
-
   const [userInfo, setUserInfo] = useState({});
-  const [posts, setPosts] = useState([
-    { id: 1, content: 'Excited to share my new project! 🚀', date: '2025-04-01', likes: 12 },
-    { id: 2, content: 'Just had the best coffee ever! ☕❤️', date: '2025-03-29', likes: 7 }
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [reminderInput, setReminderInput] = useState({ title: '', date: '' });
 
@@ -28,6 +23,34 @@ function ProfilePage() {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+        if (storedUser?.username) {
+          const response = await fetch(`/api/posts/${storedUser.username}`);
+          const contentType = response.headers.get("content-type");
+
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+
+          if (!contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error(`Expected JSON, got HTML:\n${text}`);
+          }
+
+          const data = await response.json();
+          setPosts(data);
+        }
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   const handleReminderSubmit = (e) => {
     e.preventDefault();
     if (reminderInput.title && reminderInput.date) {
@@ -37,7 +60,13 @@ function ProfilePage() {
   };
 
   const handleLike = (id) => {
-    setPosts(posts.map(post => post.id === id ? { ...post, likes: post.likes + 1 } : post));
+    setPosts(posts.map(post =>
+      post._id === id ? { ...post, likes: post.likes + 1 } : post
+    ));
+  };
+
+  const handleNewPost = (newPost) => {
+    setPosts([newPost, ...posts]);
   };
 
   return (
@@ -45,7 +74,7 @@ function ProfilePage() {
       <Navbar />
       <div className="flex flex-col lg:flex-row gap-6 px-10 mt-6">
 
-        {/* Left Sidebar - Profile */}
+        {/* Left Sidebar - Profile Info */}
         <div className="lg:w-[20%] w-full">
           <div className="bg-white p-4 flex flex-col rounded-2xl shadow-lg items-center">
             <img src={userInfo.profilePic || profile_icon} alt="profile" className="w-[100px] h-[100px] rounded-full object-cover shadow" />
@@ -65,18 +94,26 @@ function ProfilePage() {
 
         {/* Middle Section - Posts */}
         <div className="lg:w-[50%] w-full flex flex-col gap-6">
-          <Post />
+          <Post onPostSubmit={handleNewPost} />
           <div>
             <h3 className="text-xl font-semibold text-[#ff3131] mb-4">Your Posts</h3>
             <div className="space-y-4">
-              {posts.map(post => (
-                <div key={post.id} className="bg-white p-4 rounded-xl shadow relative">
-                  <p className="text-gray-800">{post.content}</p>
+              {posts.map((post, index) => (
+                <div key={post._id || index} className="bg-white p-4 rounded-xl shadow relative">
+                  {post.image && (
+                    <img
+                    src={post.image.startsWith("http") ? post.image : `http://localhost:5000/${post.image}`}
+                    alt="Post"
+                    className="w-full rounded-md mb-3 object-cover max-h-[400px]"
+                    onError={(e) => e.target.src = "https://via.placeholder.com/400"}
+                  />
+                  )}
+                  <p className="text-gray-800">{post.caption}</p>
                   <div className="flex justify-between mt-2 items-center text-gray-500 text-sm">
-                    <span>{post.date}</span>
+                    <span>{post.date || "Just now"}</span>
                     <div className="flex gap-4 items-center">
-                      <button onClick={() => handleLike(post.id)} className="flex items-center gap-1 hover:text-[#ff3131]">
-                        <FaRegHeart /> {post.likes}
+                      <button onClick={() => handleLike(post._id)} className="flex items-center gap-1 hover:text-[#ff3131]">
+                        <FaRegHeart /> {post.likes || 0}
                       </button>
                       <button className="flex items-center gap-1 hover:text-[#ff3131]">
                         <FaRegCommentDots /> Comment
@@ -93,7 +130,6 @@ function ProfilePage() {
         <div className="lg:w-[30%] w-full">
           <div className="bg-white p-4 rounded-xl shadow">
             <h3 className="text-xl font-semibold text-[#ff3131] mb-4">Set a Reminder</h3>
-
             <form onSubmit={handleReminderSubmit} className="flex flex-col gap-3 mb-4">
               <input
                 type="text"
@@ -117,8 +153,6 @@ function ProfilePage() {
                 Add Reminder
               </button>
             </form>
-
-            {/* Display Reminders */}
             <ul className="space-y-2">
               {reminders.map(rem => (
                 <li key={rem.id} className="text-gray-800 flex justify-between bg-[#EBEBEB] p-3 rounded-lg">
