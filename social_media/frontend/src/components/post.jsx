@@ -42,6 +42,7 @@ function Post({ onPostSubmit }) {
       setCaption("");
       setSelectedFile(null);
       alert("Post uploaded successfully!");
+      window.location.reload();
     } catch (err) {
       console.error("Upload failed:", err);
       alert("Failed to upload post");
@@ -66,27 +67,33 @@ function Post({ onPostSubmit }) {
       </div>
 
       {selectedFile && (
-        <div className="relative flex justify-center mb-4">
+        <div className="flex justify-center mb-4">
+        <div className="w-[80%] grid place-items-start-end relative">
+          <div className="flex justify-end w-full">
+            <button
+              onClick={removeFile}
+              className="z-10 bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center   hover:bg-red-600"
+            >
+              ×
+            </button>
+          </div>
+      
           {selectedFile.type.startsWith("image/") ? (
             <img
               src={URL.createObjectURL(selectedFile)}
               alt="Preview"
-              className="w-[80%] rounded-lg shadow-md"
+              className="w-full rounded-lg shadow-md object-contain -mt-6"
             />
           ) : (
             <video
               controls
               src={URL.createObjectURL(selectedFile)}
-              className="w-[80%] rounded-lg shadow-md"
+              className="w-full rounded-lg shadow-md object-contain -mt-6"
             />
           )}
-          <button
-            onClick={removeFile}
-            className="absolute top-[-7.5px] right-[calc(31%-150px)] bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
-          >
-            ×
-          </button>
         </div>
+      </div>
+      
       )}
 
       <div className="flex items-center justify-between">

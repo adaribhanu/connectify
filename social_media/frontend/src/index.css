@@ -6,3 +6,13 @@ body ,html, #root {
     background-color: #EBEBEB;
     padding: 0;
 }
+/* Hide scrollbar using a custom utility */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  
