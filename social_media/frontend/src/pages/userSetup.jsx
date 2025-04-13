@@ -53,7 +53,7 @@ function SetupProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/user/profile-setup', form);
+      await axios.post('http://localhost:5000/api/user/SetupProfile', form);
       navigate('/home');
     } catch (err) {
       console.error(err);
