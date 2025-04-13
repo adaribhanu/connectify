@@ -1,9 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import profileRoutes from './routes/ProfileRoute.js';
+import uploadRoutes from './routes/uploadRoute.js';
+import postRoutes from './routes/postRoutes.js'; // ⬅️ NEW
 
 dotenv.config();
 connectDB();
@@ -11,18 +15,24 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());  // Allow cross-origin requests
-app.use(express.json());  // Parse incoming JSON requests
+app.use(cors());
+app.use(express.json());
 
-// API Routes
+// Serve static files from uploads folder
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));// ⬅️ NEW
+
+// Routes
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/upload', uploadRoutes); 
+app.use('/api/posts', postRoutes);// ⬅️ NEW
 
-// Global Error Handling
+// Global Error Handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: "Internal Server Error" });

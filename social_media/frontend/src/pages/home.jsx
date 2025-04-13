@@ -22,7 +22,7 @@ function Home() {
           <div className="w-[17.5%] mr-[15px] h-full">
             <SpeedNav />
           </div>
-          <div className="w-[60%] h-full overflow-y-auto mr-[40px] n0-scrollbar">
+          <div className="w-[60%] h-full overflow-y-auto mr-[40px] n0- scrollbar-hide">
             <Feed />
           </div>
         </div>

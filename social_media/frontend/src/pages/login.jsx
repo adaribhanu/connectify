@@ -23,20 +23,32 @@ function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        alert('Login Successful! 🎉');
         localStorage.setItem('token', data.token);
+  
+        // Fetch profile by email
+        const profileRes = await fetch(`http://localhost:5000/api/profile/byEmail/${email}`);
+        const profileData = await profileRes.json();
+  
+        if (profileRes.ok) {
+          localStorage.setItem('userInfo', JSON.stringify(profileData));
+        } else {
+          console.warn('Profile not found.');
+        }
+  
         navigate('/home');
       } else {
         alert(`Error: ${data.message}`);
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       alert('Something went wrong. Please try again!');
     }
   };
+  
 
   return (
     <div className="login_page bg-[#FFDE59] min-h-screen flex">
