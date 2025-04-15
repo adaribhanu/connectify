@@ -8,8 +8,8 @@ function SuggestionCard() {
         <p className="text-[#737373]">emo bro</p>
       </div>
       <div className="flex flex-col justify-center items-center w-[23%] h-[100%] space-y-[4px]">
-        <button className="bg-[#ED6A5E] rounded-[5px] w-[100%] p-[4px] text-white">Follow</button>
-        <button className="rounded-[5px] w-[100%] bg-white p-[4px] text-[#ED6A5E]">Ignore</button>
+        <button className="bg-[#ED6A5E] rounded-[5px] w-[100%] p-[4px] cursor-pointer text-white">Follow</button>
+        <button className="rounded-[5px] w-[100%] bg-white p-[4px] cursor-pointer text-[#ED6A5E]">Ignore</button>
       </div>
       
     </div>

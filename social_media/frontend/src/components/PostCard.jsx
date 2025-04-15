@@ -53,16 +53,16 @@ const PostCard = () => {
               />
               {/* Overlay Buttons */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-6 px-4 py-2 rounded-[20px] bg-white/80 backdrop-blur-md text-gray-800 shadow-lg">
-                <button className="flex items-center gap-1 hover:text-[#ff3131]">
+                <button className="flex items-center gap-1 cursor-pointer hover:text-[#ff3131]">
                   <FaRegHeart /> <span>{post.likes || 0}</span>
                 </button>
-                <button className="flex items-center gap-1 hover:text-[#ff3131]">
+                <button className="flex items-center gap-1 cursor-pointer hover:text-[#ff3131]">
                   <FaRegCommentDots /> <span>15</span>
                 </button>
-                <button className="flex items-center gap-1 hover:text-[#ff3131]">
+                <button className="flex items-center gap-1 cursor-pointer hover:text-[#ff3131]">
                   <FaShareAlt /> <span>3</span>
                 </button>
-                <button className="hover:text-[#ff3131]">
+                <button className="hover:text-[#ff3131] cursor-pointer">
                   <FaRegBookmark />
                 </button>
               </div>

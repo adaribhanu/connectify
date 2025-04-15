@@ -123,7 +123,7 @@ function Post({ onPostSubmit }) {
 
         <button
           onClick={handlePost}
-          className="bg-[#ED6A5E] text-white font-semibold text-[18px] rounded-[10px] px-[20px] hover:bg-[#FF3131]"
+          className="bg-[#ED6A5E] cursor-pointer text-white font-semibold text-[18px] rounded-[10px] px-[20px] hover:bg-[#FF3131]"
         >
           Post
         </button>

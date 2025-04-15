@@ -1,4 +1,3 @@
-// routes/ProfileRouter.js
 import express from 'express';
 import Profile from '../models/Profile.js';
 
@@ -9,7 +8,7 @@ router.post('/userSetup', async (req, res) => {
   const { name, username, email, dob, bio, location, profession, phone, profilePic } = req.body;
 
   try {
-    let profile = await Profile.findOne({ email }); // check by email instead of username
+    let profile = await Profile.findOne({ email });
 
     if (profile) {
       profile.name = name;
@@ -47,5 +46,46 @@ router.get('/byEmail/:email', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+// 🔥 NEW: GET /api/profile/suggestions
+router.get('/suggestions', async (req, res) => {
+  try {
+    const profiles = await Profile.find({}, 'name username profilePic dob');
+    res.status(200).json(profiles);
+  } catch (error) {
+    console.error('Error fetching suggestions:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+// GET /api/profile/upcoming-birthdays
+router.get('/upcoming-birthdays', async (req, res) => {
+  try {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const next7Days = [];
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      next7Days.push({ month: date.getMonth() + 1, day: date.getDate() });
+    }
+
+    const profiles = await Profile.find({ dob: { $ne: null } });
+
+    const upcoming = profiles.filter(profile => {
+      const dob = new Date(profile.dob);
+      const month = dob.getMonth() + 1;
+      const day = dob.getDate();
+      return next7Days.some(d => d.month === month && d.day === day);
+    });
+
+    res.json(upcoming);
+  } catch (err) {
+    console.error("Error fetching upcoming birthdays:", err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+
 
 export default router;

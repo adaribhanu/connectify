@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaRegHeart, FaRegCommentDots, FaTrashAlt } from 'react-icons/fa';
+import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa';
 import Post from '../components/post';
 import Navbar from '../components/nav';
 import profile_icon from "../assets/Images/profile.png";
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function ProfilePage() {
   const location = useLocation();
@@ -12,6 +13,7 @@ function ProfilePage() {
   const [reminders, setReminders] = useState([]);
   const [reminderInput, setReminderInput] = useState({ title: '', date: '' });
 
+  // Load user info
   useEffect(() => {
     if (location.state?.userInfo) {
       setUserInfo(location.state.userInfo);
@@ -23,6 +25,7 @@ function ProfilePage() {
     }
   }, [location.state]);
 
+  // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -48,11 +51,39 @@ function ProfilePage() {
     fetchPosts();
   }, []);
 
-  const handleReminderSubmit = (e) => {
+  // 🔥 Fetch reminders from backend using userId (not username)
+  useEffect(() => {
+    const fetchReminders = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+        if (storedUser?._id) {
+          const res = await axios.get(`http://localhost:5000/api/reminders/${storedUser._id}`);
+          setReminders(res.data);
+        }
+      } catch (err) {
+        console.error("Error fetching reminders:", err);
+      }
+    };
+
+    fetchReminders();
+  }, []);
+
+  // 🔥 Save reminder to backend
+  const handleReminderSubmit = async (e) => {
     e.preventDefault();
-    if (reminderInput.title && reminderInput.date) {
-      setReminders([...reminders, { ...reminderInput, id: Date.now() }]);
+    const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+    if (!reminderInput.title || !reminderInput.date || !storedUser?._id) return;
+
+    try {
+      const response = await axios.post(`http://localhost:5000/api/reminders/${storedUser._id}`, {
+        title: reminderInput.title,
+        date: reminderInput.date,
+      });
+
+      setReminders([...reminders, response.data]);
       setReminderInput({ title: '', date: '' });
+    } catch (err) {
+      console.error("Error saving reminder:", err);
     }
   };
 
@@ -86,9 +117,8 @@ function ProfilePage() {
     <div className="min-h-screen bg-[#f6f6f6] flex flex-col">
       <Navbar />
       <div className="flex flex-col lg:flex-row gap-6 px-4 py-4 flex-1 overflow-y-auto">
-
         {/* Left Sidebar */}
-        <div className="lg:w-[20%] w-full">
+        <div className="lg:w-[20%] w-full h-full">
           <div className="bg-white p-4 flex flex-col rounded-2xl shadow-lg items-center h-full">
             <img src={userInfo.profilePic || profile_icon} alt="profile" className="w-[100px] h-[100px] rounded-full object-cover shadow" />
             <h2 className="text-2xl mt-[10px] font-bold text-[#ff3131]">{userInfo.name || "Name"}</h2>
@@ -108,34 +138,38 @@ function ProfilePage() {
         {/* Middle Section */}
         <div className="lg:w-[50%] w-full flex flex-col">
           <Post onPostSubmit={handleNewPost} />
-          <h3 className="text-xl font-semibold text-[#ff3131] mb-2 px-1">Your Posts</h3>
-          <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-200px)] pr-2 scrollbar-hide">
+          <h3 className="text-2xl font-bold text-[#ff3131] mb-4 mt-4 px-2">Your Posts</h3>
+          <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-220px)] px-2 pr-3 scrollbar-hide">
             {posts.map((post, index) => (
-              <div key={post._id || index} className="bg-white p-4 rounded-xl shadow relative">
+              <div
+                key={post._id || index}
+                className="bg-white p-5 rounded-2xl shadow-md border border-gray-200 relative transition-transform duration-300 hover:scale-[1.01]"
+              >
                 {post.image && (
                   <img
                     src={post.image.startsWith("http") ? post.image : `http://localhost:5000/${post.image}`}
                     alt="Post"
-                    className="w-full rounded-md mb-3 object-contain max-h-[500px]"
+                    className="w-full rounded-xl mb-4 object-cover max-h-[400px] shadow-sm"
                     onError={(e) => e.target.src = "https://via.placeholder.com/400"}
                   />
                 )}
-                <p className="text-[#ff3131] font-semibold mb-1">{post.name || userInfo.name || "unknown"}</p>
-                <p className="text-[#ff3131] font-semibold mb-1">{post.username || userInfo.username || "unknown"}</p>
-                <p className="text-gray-800">{post.caption}</p>
-
-                <div className="flex justify-between mt-2 items-center text-gray-500 text-sm">
-                  <span>{post.date || "Just now"}</span>
-                  <div className="flex gap-4 items-center">
-                    <button onClick={() => handleLike(post._id)} className="flex items-center gap-1 hover:text-[#ff3131]">
-                      <FaRegHeart /> {post.likes || 0}
+                <div className="mb-2">
+                  <p className="text-[#ff3131] font-bold text-base">{post.name || userInfo.name || "Unknown"}</p>
+                  <p className="text-[#ff3131] font-medium text-sm">@{post.username || userInfo.username || "unknown"}</p>
+                </div>
+                <p className="text-gray-800 mb-4">{post.caption}</p>
+                <div className="flex justify-between items-center text-gray-600 text-sm">
+                  <span className="italic">{post.date || "Just now"}</span>
+                  <div className="flex gap-3 items-center">
+                    <button onClick={() => handleLike(post._id)} className="flex items-center gap-1 hover:text-[#ff3131] transition">
+                      <FaRegHeart className="text-lg" /> {post.likes || 0}
                     </button>
-                    <button className="flex items-center gap-1 hover:text-[#ff3131]">
-                      <FaRegCommentDots /> Comment
+                    <button className="flex items-center gap-1 hover:text-[#ff3131] transition">
+                      <FaRegCommentDots className="text-lg" /> Comment
                     </button>
                     <button
                       onClick={() => handleDelete(post._id)}
-                      className="text-sm text-white bg-[#ff3131] px-3 py-1 rounded-md shadow hover:bg-[#bb1e1e]"
+                      className="text-white text-sm bg-[#ff3131] px-3 py-1.5 rounded-md shadow hover:bg-[#bb1e1e] transition"
                     >
                       Delete
                     </button>
@@ -146,8 +180,8 @@ function ProfilePage() {
           </div>
         </div>
 
-        {/* Right Sidebar */}
-        <div className="lg:w-[30%] w-full">
+        {/* Right Sidebar - Reminders */}
+        <div className="lg:w-[30%] w-full h-full">
           <div className="bg-white p-4 rounded-xl shadow h-full flex flex-col">
             <h3 className="text-xl font-semibold text-[#ff3131] mb-4">Set a Reminder</h3>
             <form onSubmit={handleReminderSubmit} className="flex flex-col gap-3 mb-4">
@@ -173,17 +207,16 @@ function ProfilePage() {
                 Add Reminder
               </button>
             </form>
-            <ul className="space-y-2 overflow-y-auto">
-              {reminders.map(rem => (
-                <li key={rem.id} className="text-gray-800 flex justify-between bg-[#EBEBEB] p-3 rounded-lg">
-                  <span className="text-md text-[#737373] font-bold">{rem.title}</span>
-                  <span className="text-sm text-[#737373]">{rem.date}</span>
-                </li>
+            <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-280px)]">
+              {reminders.map((reminder) => (
+                <div key={reminder._id} className="p-3 bg-[#ff3131] rounded-xl text-white">
+                  <p className="font-semibold">{reminder.title}</p>
+                  <p className="italic">{reminder.date}</p>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );

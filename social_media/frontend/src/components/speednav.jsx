@@ -23,17 +23,17 @@ function SpeedNav() {
         Profile
       </Link>
 
-      <button className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
+      <button className="flex items-center gap-3 text-left p-3 cursor-pointer rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
         <MessageCircle className="w-5 h-5 text-[#ff3131]" />
         Messages
       </button>
 
-      <button className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
+      <button className="flex items-center gap-3 text-left p-3 cursor-pointer rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
         <Bell className="w-5 h-5 text-[#ff3131]" />
         Notifications
       </button>
 
-      <button className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
+      <button className="flex items-center gap-3 text-left p-3 cursor-pointer rounded-lg hover:bg-[#f3f3f3] font-semibold transition">
         <Settings className="w-5 h-5 text-[#ff3131]" />
         Settings
       </button>
@@ -41,7 +41,7 @@ function SpeedNav() {
       <div className="mt-auto w-full">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full text-left p-3 rounded-lg hover:bg-[#ffeaea] text-[#ff3131] font-semibold transition"
+          className="flex items-center gap-3 w-full text-left p-3 cursor-pointer rounded-lg hover:bg-[#ffeaea] text-[#ff3131] font-semibold transition"
         >
           <LogOut className="w-5 h-5" />
           Logout

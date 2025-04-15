@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/nav";
 import Feed from "../components/feed";
 import SpeedNav from "../components/speednav";
+import ChatApp from "../components/ChatApp";
 
 function Home() {
     const navigate = useNavigate();
@@ -18,12 +19,15 @@ function Home() {
       <div className="h-screen flex flex-col bg-[#EBEBEB]"> 
         <Navbar />
   
-        <div className="flex h-full flex-1 p-[20px] overflow-hidden ">
-          <div className="w-[17.5%] mr-[15px] h-full">
+        <div className="flex h-full flex-1 p-[20px] pb-[0px] overflow-hidden ">
+          <div className="w-[17.5%]  pb-[20px] h-full">
             <SpeedNav />
           </div>
-          <div className="w-[60%] h-full overflow-y-auto mr-[40px] n0- scrollbar-hide">
+          <div className="w-[60%] h-full overflow-y-auto px-[20px] mb-20px n0- scrollbar-hide">
             <Feed />
+          </div>
+          <div className="w-[17.5%]  pb-[20px] h-full">
+            <ChatApp />
           </div>
         </div>
       </div>

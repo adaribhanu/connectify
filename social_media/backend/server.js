@@ -8,29 +8,35 @@ import userRoutes from './routes/userRoutes.js';
 import profileRoutes from './routes/ProfileRoute.js';
 import uploadRoutes from './routes/uploadRoute.js';
 import postRoutes from './routes/postRoutes.js'; // ⬅️ NEW
+import reminderRoutes from './routes/reminderRoutes.js'; // ⬅️ NEW
 
 dotenv.config();
-connectDB();
 
+// Initialize express app
 const app = express();
+
+// Connect to the database
+connectDB();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Serve static files from uploads folder
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));// ⬅️ NEW
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads"))); // ⬅️ NEW
 
 // Routes
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+// Define your routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/upload', uploadRoutes); 
-app.use('/api/posts', postRoutes);// ⬅️ NEW
+app.use('/api/posts', postRoutes); // ⬅️ NEW
+app.use('/api/reminders', reminderRoutes); // ⬅️ NEW
 
 // Global Error Handler
 app.use((err, req, res, next) => {

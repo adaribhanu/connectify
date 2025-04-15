@@ -59,18 +59,18 @@ function Navbar() {
             placeholder="Search Something...."
             className="font-bold placeholder:font-bold placeholder-gray-500 w-[260px] h-[100%] border-none outline-none bg-transparent"
           />
-          <button className="bg-transparent p-1 rounded hover:bg-[#E4E6EB] transition">
+          <button className="bg-transparent p-1 rounded hover:bg-[#E4E6EB] cursor-pointer transition">
             <img src={search} alt="Search" className="w-6 h-6" />
           </button>
         </div>
 
         {/* Settings Icon */}
-        <button className="bg-[#DFE1E5] p-2 rounded-full hover:shadow-md hover:bg-[#ADAEAF] transition">
+        <button className="bg-[#DFE1E5] p-2 rounded-full hover:shadow-md hover:bg-[#ADAEAF] cursor-pointer transition">
           <img src={settings} alt="Settings" className="w-5 h-5" />
         </button>
 
         {/* Notification Icon */}
-        <button className="bg-[#DFE1E5] p-2 rounded-full hover:shadow-md hover:bg-[#ADAEAF] transition">
+        <button className="bg-[#DFE1E5] p-2 rounded-full hover:shadow-md hover:bg-[#ADAEAF] cursor-pointer transition">
           <img src={bell} alt="Notifications" className="w-5 h-5" />
         </button>
 

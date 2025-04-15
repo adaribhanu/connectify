@@ -64,14 +64,27 @@ function UserSetup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/user/profile-setup', form);
-      navigate('/home');
+      // Format DOB to "YYYY-MM-DD"
+      const dobFormatted = new Date(form.dob).toISOString().split("T")[0];
+  
+      const formattedForm = {
+        ...form,
+        dob: dobFormatted,
+      };
+  
+      console.log("Submitting form data:", formattedForm); // for debugging
+      await axios.post('http://localhost:5000/api/profile/userSetup', formattedForm);
+  
+      setTimeout(() => {
+        alert('Account Created Successfully');
+        navigate('/home');
+      }, 100);
     } catch (err) {
       console.error('Submission error:', err.response?.data || err.message);
       alert(err.response?.data?.message || "Failed to create profile.");
     }
   };
-
+  
   return (
     <div className="bg-[#FFDE59] min-h-screen flex items-center justify-center px-4">
       <div className="bg-white w-full max-w-6xl rounded-[25px] shadow-lg flex flex-col md:flex-row overflow-hidden">

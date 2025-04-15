@@ -4,6 +4,8 @@ import Reg from './pages/reg.jsx';
 import Home from './pages/home.jsx';          
 import SetupProfile from './pages/userSetup.jsx';
 import ProfilePage from './pages/profile.jsx';  
+import SuggestionsSection from "./components/SuggestionsSection.jsx";
+import ChatApp from "./components/ChatApp.jsx";
 
 function App() {
   return (
